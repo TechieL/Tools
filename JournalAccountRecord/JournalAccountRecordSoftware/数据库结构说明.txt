@@ -1,0 +1,18 @@
+CREATE TABLE journal ( 
+    id       INTEGER PRIMARY KEY
+                     NOT NULL
+                     UNIQUE,
+    catagory INT     NOT NULL
+                     REFERENCES category,
+    data     DATE    NOT NULL,
+    value    FLOAT   NOT NULL,
+    remark   TEXT,
+    auditing BOOLEAN 
+);
+CREATE TABLE category ( 
+    id   INTEGER PRIMARY KEY
+                 NOT NULL
+                 UNIQUE,
+    name TEXT    NOT NULL
+                 UNIQUE 
+);

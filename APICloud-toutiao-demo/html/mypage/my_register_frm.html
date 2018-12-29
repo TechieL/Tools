@@ -1,0 +1,110 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+	<style>
+        .login-third {
+            margin-top: 3rem;
+        }
+	</style>
+</head>
+<body>
+    <section class="aui-content aui-margin-t-15">
+        <ul class="aui-list aui-form-list">
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label aui-border-r color-orange">
+                        手机号 <small class="aui-margin-l-5 aui-text-warning">+86</small>
+                    </div>
+                    <div class="aui-list-item-input aui-padded-l-10">
+                        <input type="number" pattern="[0-9]*" placeholder="请输入手机号注册" id="mobile" >
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-input" style="width: auto;">
+                        <input type="password" placeholder="请输入密码" id="code">
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-input" style="width: auto;">
+                        <input type="password" placeholder="请再次输入密码" id="code2">
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </section>
+    <section class="aui-content-padded">
+        <div class="aui-btn aui-btn-block aui-btn-info aui-btn-sm" tapmode onclick="fnSelectLogin();">注册</div>
+    </section>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="../../script/SHA1.js"></script>
+<script type="text/javascript" src="../../script/my.js"></script>
+<script type="text/javascript">
+    apiready = function(){
+        api.parseTapmode();
+    };
+    function fnSelectLogin() {
+      //取编辑框内容
+      var code_edit = $api.byId('code');
+      var code2_edit = $api.byId('code2');
+      if(code2_edit.value != code_edit.value) {
+        alert("两次密码输入不一致");
+        return;
+      }
+      var mobile_edit = $api.byId('mobile');
+            //调用jQuery.ajax
+        $.ajax({
+            "url": "https://d.apicloud.com/mcm/api/user",
+            "cache": false,
+            "type": "POST",
+            "headers": {
+              "X-APICloud-AppId": MyfnGetAppId(),
+              "X-APICloud-AppKey": MyfnGetAppKey()
+            },
+            "data": {
+                "username": mobile_edit.value,
+                "password": code_edit.value
+            }
+        }).done(function(data, status, header) {
+            //success body
+            var userid = data.id;
+            if (undefined == userid) {
+              //fail body
+              //提示
+              api.toast({msg: "注册失败，用户名已存在",
+                  duration: 2000,
+                  location: 'bottom'
+              });
+              return;
+            }
+            //提示
+            api.toast({msg: '注册成功  userid='+ userid,
+                duration: 2000,
+                location: 'bottom',
+                global : true,
+            });
+            api.closeWin({
+                name: api.winName
+            });
+            return;
+        }).fail(function(header, status, errorThrown) {
+            //fail body
+            //提示
+            api.toast({msg: "注册失败，无法连接服务器",
+                duration: 2000,
+                location: 'bottom'
+            });
+        });
+    }
+</script>
+</html>

@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/file">
+        <file>JournalAccountDB.db</file>
+        <file>cropped--150x150.jpg</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,196 @@
+<!doctype html>
+<!--首页页眉，包含搜索框及横向滚动菜单-->
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <style type="text/css">
+        .aui-bar-nav {
+            background-color: #e74c3c;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="aui-bar aui-bar-nav" id="aui-header">
+        <div class="aui-pull-left aui-btn">
+            <span class="aui-iconfont aui-icon-my"></span>
+        </div>
+        <div class="aui-title" style="left:2rem; right: 2rem;">
+            <div class="aui-searchbar" style="background-color: #e74c3c;">
+                <div class="aui-searchbar-input aui-border-radius" tapmode onclick="onClickSearch();">
+                    <i class="aui-iconfont aui-icon-search"></i>
+                    <input type="search" placeholder="搜你想搜的" id="search-input">
+                    <div class="aui-searchbar-clear-btn">
+                        <i class="aui-iconfont aui-icon-close"></i>
+                    </div>
+                </div>
+                <div class="aui-searchbar-btn" tapmode>取消</div>
+            </div>
+        </div>
+        <div class="aui-pull-right aui-btn">
+            <span class="aui-iconfont aui-icon-plus"></span>
+        </div>
+    </header>
+
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript">
+    //私有成员声明
+    var NavigationBar_h, headerPos_h;
+    apiready = function() {
+        api.parseTapmode();
+        //私有成员初始化
+        NavigationBar_h = 20;
+        var header = $api.byId('aui-header');
+        $api.fixStatusBar(header);
+        headerPos_h = $api.offset(header).h;
+        var body_h = $api.offset($api.dom('body')).h;
+
+        //增加顶部导航栏
+        var NVNavigationBar = api.require('NVNavigationBar');
+        NVNavigationBar.open({
+            rect: {
+                x: 0,
+                y: headerPos_h,
+                w: api.frameWidth,
+                h: NavigationBar_h
+            },
+            styles: {
+                orientation: 'horizontal',
+                bg: '#6b6b6b',
+                bgAlpha: 1,
+                font: {
+                    size: 14,
+                    sizeSelected: 16,
+                    color: '#000000',
+                    colorSelected: '#ff0000',
+                    alpha: 1
+                },
+                itemSize: {
+                    w: 45,
+                    h: NavigationBar_h
+                }
+            },
+            items: [{
+                title: '推荐',
+                bg: '#ffffff',
+            }, {
+                title: '热点',
+                bg: '#ffffff',
+            }, {
+                title: '视频',
+                bg: '#ffffff',
+            }, {
+                title: '问答',
+                bg: '#ffffff',
+            }, {
+                title: '小品',
+                bg: '#ffffff',
+            }, {
+                title: '娱乐',
+                bg: '#ffffff',
+            }, {
+                title: '图片',
+                bg: '#ffffff',
+            }, {
+                title: '科技',
+                bg: '#ffffff',
+            }, {
+                title: '财经',
+                bg: '#ffffff',
+            }, {
+                title: '军事',
+                bg: '#ffffff',
+            }],
+            selectedIndex: 0,
+            fixedOn: api.frameName,
+            id: 'first'
+        }, function(ret, err) {
+
+        });
+        //主页面显示-新闻列表
+        api.openFrame({
+                name: 'new_list_frame',
+                url: 'new_list_frame.html',
+                bounces: true,
+                rect: {
+                    x: 0,
+                    y: headerPos_h + NavigationBar_h,
+                    w: 'auto',
+                    h: api.frameHeight - headerPos_h - NavigationBar_h
+                }
+            })
+            //页面切换事件响应
+        api.addEventListener({
+            name: 'PageChanged'
+        }, function(ret, err) {
+            if (ret.value.page_index == 0) {
+                api.setFrameAttr({
+                    name: 'new_list_frame',
+                    hidden: false
+                });
+            } else {
+                api.setFrameAttr({
+                    name: 'new_list_frame',
+                    hidden: true
+                });
+            };
+        });
+    };
+    //顶部搜索框被点击响应函数
+    function onClickSearch() {
+        var UISearchBar = api.require('UISearchBar');
+        UISearchBar.open({
+            placeholder: '请输入搜索关键字',
+            historyCount: 10,
+            showRecordBtn: true,
+            texts: {
+                cancelText: '取消',
+                clearText: '清除搜索记录'
+            },
+            styles: {
+                navBar: {
+                    bgColor: '#FFFFFF',
+                    borderColor: '#ccc'
+                },
+                searchBox: {
+                    bgImg: '',
+                    color: '#000',
+                    height: 44
+                },
+                cancel: {
+                    bg: 'rgba(0,0,0,0)',
+                    color: '#D2691E',
+                    size: 16
+                },
+                list: {
+                    color: '#696969',
+                    bgColor: '#FFFFFF',
+                    borderColor: '#eee',
+                    size: 16
+                },
+                clear: {
+                    color: '#000000',
+                    borderColor: '#ccc',
+                    size: 16
+                }
+            }
+        }, function(ret, err) {
+            if (ret) {
+                alert(JSON.stringify(ret));
+            } else {
+                alert(JSON.stringify(err));
+            }
+        });
+    }
+
+    function closeWin() {
+        api.closeWin({});
+    }
+</script>
+
+</html>
